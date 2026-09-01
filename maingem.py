@@ -8,17 +8,21 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 # ---------------------------------------------------------
-# Configuration
+# Configuration Settings
 # ---------------------------------------------------------
+
 INPUT_VIDEO = (
-    "VideoBadminton_Dataset/14_Smash/"
-    "2022-08-30_19-19-43_dataset_set1_299_026266_026286_B_14.mp4")
+    "VideoBadminton_Dataset/13_Long Serve/"
+    "2022-09-06_19-37-10_dataset_set1_156_014621_014725_A_13.mp4"
+)
 OUTPUT_VIDEO = "data/pose_output.mp4"
+
 OUTPUT_CSV = "data/pose_data.csv"
 
 MODEL_PATH = "models/pose_landmarker_full.task"
+
 # ---------------------------------------------------------
-# MediaPipe Landmark IDs
+# MediaPipe 3D Pose Landmark Mapping Indices
 # ---------------------------------------------------------
 
 LEFT_SHOULDER = 11
@@ -39,8 +43,9 @@ RIGHT_KNEE = 26
 LEFT_ANKLE = 27
 RIGHT_ANKLE = 28
 
+
 # ---------------------------------------------------------
-# Create Pose Landmarker
+# MediaPipe Pose Landmarker Initializer
 # ---------------------------------------------------------
 
 def create_pose_landmarker():
@@ -62,11 +67,16 @@ def create_pose_landmarker():
         options
     )
 
+
 # ---------------------------------------------------------
-# Calculate Angle Between Three Points
+# Biomechanical Joint Angle Vector Calculation
 # ---------------------------------------------------------
 
-def calculate_angle(point_a, point_b, point_c):
+def calculate_angle(
+    point_a,
+    point_b,
+    point_c
+):
 
     a = np.array(point_a)
     b = np.array(point_b)
@@ -95,11 +105,53 @@ def calculate_angle(point_a, point_b, point_c):
 
     return angle
 
+
 # ---------------------------------------------------------
-# Process Video
+# Technique Feedback Rule Engine
 # ---------------------------------------------------------
+
+def analyze_smash_form(
+    right_elbow_angle,
+    right_wrist_y,
+    right_shoulder_y
+):
+
+    feedback = []
+
+    # Normalized space: y = 0.0 top, y = 1.0 bottom
+    is_arm_raised = right_wrist_y < right_shoulder_y
+
+    if is_arm_raised:
+
+        if right_elbow_angle < 70.0:
+
+            feedback.append(
+                "Elbow too bent!"
+            )
+
+        elif right_elbow_angle > 160.0:
+
+            feedback.append(
+                "Good full extension"
+            )
+
+        else:
+
+            feedback.append(
+                "Extend arm higher"
+            )
+
+    else:
+
+        feedback.append(
+            "Ready position"
+        )
+
+    return feedback
+
+
 # ---------------------------------------------------------
-# Process Video
+# Frame Processing Loop & Data Logging
 # ---------------------------------------------------------
 
 def process_video(
@@ -119,10 +171,11 @@ def process_video(
         success, frame = cap.read()
 
         if not success:
+
             break
 
         # -------------------------------------------------
-        # Convert BGR to RGB
+        # RGB Color System Conversion
         # -------------------------------------------------
 
         rgb_frame = cv2.cvtColor(
@@ -131,7 +184,7 @@ def process_video(
         )
 
         # -------------------------------------------------
-        # Convert frame to MediaPipe image
+        # MediaPipe Image Wrapper Creation
         # -------------------------------------------------
 
         mp_image = mp.Image(
@@ -140,7 +193,7 @@ def process_video(
         )
 
         # -------------------------------------------------
-        # Calculate timestamp
+        # Frame Timestamp Calculation
         # -------------------------------------------------
 
         timestamp_ms = int(
@@ -148,7 +201,7 @@ def process_video(
         )
 
         # -------------------------------------------------
-        # Detect pose
+        # Pose Inference Detection
         # -------------------------------------------------
 
         result = landmarker.detect_for_video(
@@ -157,16 +210,12 @@ def process_video(
         )
 
         # -------------------------------------------------
-        # Process detected pose
+        # Extract Coordinate Metrics & Annotate
         # -------------------------------------------------
 
         if result.pose_landmarks:
 
             landmarks = result.pose_landmarks[0]
-
-            # ---------------------------------------------
-            # Get landmark coordinates
-            # ---------------------------------------------
 
             def point(landmark_id):
 
@@ -178,7 +227,7 @@ def process_video(
                 ]
 
             # ---------------------------------------------
-            # Calculate joint angles
+            # Angle Metrics Generation
             # ---------------------------------------------
 
             left_elbow_angle = calculate_angle(
@@ -206,7 +255,21 @@ def process_video(
             )
 
             # ---------------------------------------------
-            # Save landmarks + angles to CSV
+            # Stroke Form Analysis
+            # ---------------------------------------------
+
+            r_shoulder_y = point(RIGHT_SHOULDER)[1]
+
+            r_wrist_y = point(RIGHT_WRIST)[1]
+
+            current_feedback = analyze_smash_form(
+                right_elbow_angle,
+                r_wrist_y,
+                r_shoulder_y
+            )
+
+            # ---------------------------------------------
+            # Serializing Single Data Record to CSV
             # ---------------------------------------------
 
             row = [frame_number]
@@ -230,7 +293,7 @@ def process_video(
             csv_writer.writerow(row)
 
             # ---------------------------------------------
-            # Draw pose landmarks
+            # Render Skeleton Nodes
             # ---------------------------------------------
 
             for landmark in landmarks:
@@ -257,7 +320,7 @@ def process_video(
                     )
 
             # ---------------------------------------------
-            # Display angles
+            # On-Screen HUD Angle Displays
             # ---------------------------------------------
 
             cv2.putText(
@@ -300,8 +363,34 @@ def process_video(
                 2
             )
 
+            # ---------------------------------------------
+            # On-Screen Dynamic Feedback Tips
+            # ---------------------------------------------
+
+            y_offset = 170
+
+            for tip in current_feedback:
+
+                color = (
+                    (0, 255, 0)
+                    if "Good" in tip
+                    else (0, 0, 255)
+                )
+
+                cv2.putText(
+                    frame,
+                    f"TIP: {tip}",
+                    (30, y_offset),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.8,
+                    color,
+                    2
+                )
+
+                y_offset += 30
+
         # -------------------------------------------------
-        # Write output frame
+        # Render Video Frame & Loop Progress Tracking
         # -------------------------------------------------
 
         writer.write(frame)
@@ -319,14 +408,15 @@ def process_video(
         f"{frame_number} frames."
     )
 
+
 # ---------------------------------------------------------
-# Main Function
+# Application Entry Point & Resource Pipeline
 # ---------------------------------------------------------
 
 def main():
 
     # -----------------------------------------------------
-    # 1. Check that the pose model exists
+    # Verification Steps
     # -----------------------------------------------------
 
     if not os.path.exists(MODEL_PATH):
@@ -338,10 +428,6 @@ def main():
 
         return
 
-    # -----------------------------------------------------
-    # 2. Check that the input video exists
-    # -----------------------------------------------------
-
     if not os.path.exists(INPUT_VIDEO):
 
         print(
@@ -349,15 +435,7 @@ def main():
             f"{INPUT_VIDEO}"
         )
 
-        print(
-            "Put a video there when you're ready."
-        )
-
         return
-
-    # -----------------------------------------------------
-    # 3. Open the video
-    # -----------------------------------------------------
 
     cap = cv2.VideoCapture(INPUT_VIDEO)
 
@@ -371,7 +449,7 @@ def main():
         return
 
     # -----------------------------------------------------
-    # 4. Read video properties
+    # Read Frame Dimensional Properties
     # -----------------------------------------------------
 
     width = int(
@@ -386,19 +464,23 @@ def main():
 
     if fps <= 0:
 
-        fps = 30
+        fps = 30.0
 
     print("Video opened successfully!")
-
-    print(
-        f"Resolution: "
-        f"{width} x {height}"
-    )
-
+    print(f"Resolution: {width} x {height}")
     print(f"FPS: {fps}")
 
+    total_frames = int(
+        cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    )
+
+    duration = total_frames / fps
+
+    print(f"Total frames: {total_frames}")
+    print(f"Estimated duration: {duration:.2f} seconds")
+
     # -----------------------------------------------------
-    # 5. Create output directory and video writer
+    # Initialize Output Video Stream
     # -----------------------------------------------------
 
     os.makedirs(
@@ -418,7 +500,7 @@ def main():
     )
 
     # -----------------------------------------------------
-    # 6. Create CSV file
+    # Initialize Output CSV Schema (Single Header Injection)
     # -----------------------------------------------------
 
     csv_file = open(
@@ -448,8 +530,9 @@ def main():
     ])
 
     csv_writer.writerow(header)
+
     # -----------------------------------------------------
-    # 7. Create the pose landmarker
+    # Core Task Landmarker Execution
     # -----------------------------------------------------
 
     landmarker = create_pose_landmarker()
@@ -459,10 +542,6 @@ def main():
     )
 
     print("Processing video...")
-
-    # -----------------------------------------------------
-    # 8. Process the video
-    # -----------------------------------------------------
 
     process_video(
         cap,
@@ -475,7 +554,7 @@ def main():
     )
 
     # -----------------------------------------------------
-    # 9. Clean up
+    # Resource Deallocation
     # -----------------------------------------------------
 
     landmarker.close()
@@ -485,10 +564,6 @@ def main():
     writer.release()
 
     csv_file.close()
-
-    # -----------------------------------------------------
-    # 10. Finished
-    # -----------------------------------------------------
 
     print("\nFinished!")
 
@@ -504,7 +579,7 @@ def main():
 
 
 # ---------------------------------------------------------
-# Start Program
+# Execution Trigger
 # ---------------------------------------------------------
 
 if __name__ == "__main__":
