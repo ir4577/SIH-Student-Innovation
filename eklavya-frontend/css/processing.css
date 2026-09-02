@@ -1,0 +1,153 @@
+/* ==========================================================================
+   Processing Page
+   ========================================================================== */
+
+.processing-shell {
+  min-height: calc(100vh - 69px);
+  display: flex;
+  align-items: center;
+  padding: 48px 0;
+}
+
+.processing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.proc-left { max-width: 480px; }
+
+.proc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.proc-title {
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  margin-bottom: 30px;
+}
+
+.proc-percent {
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.proc-step-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+  margin-bottom: 10px;
+  min-height: 1.4em;
+}
+
+.proc-bar-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-panel-2);
+  overflow: hidden;
+  margin-bottom: 36px;
+}
+
+.proc-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  transition: width 0.4s var(--ease-out);
+}
+
+.proc-current {
+  font-size: 0.9rem;
+  color: var(--ink-tertiary);
+}
+.proc-current strong { color: var(--ink-primary); font-weight: 600; }
+
+.proc-log {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proc-log-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.84rem;
+  color: var(--ink-tertiary);
+  opacity: 0.5;
+  transition: opacity var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.proc-log-item.is-done { color: var(--ink-secondary); opacity: 1; }
+.proc-log-item.is-current { color: var(--ink-primary); opacity: 1; font-weight: 600; }
+
+.proc-log-item .pli-mark {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-tertiary);
+  position: relative;
+}
+.proc-log-item.is-done .pli-mark { border-color: var(--accent); background: var(--accent); }
+.proc-log-item.is-current .pli-mark { border-color: var(--accent); }
+.proc-log-item.is-current .pli-mark::after {
+  content: '';
+  position: absolute; inset: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Right: skeleton visualization panel */
+.proc-visual {
+  aspect-ratio: 1/1;
+  position: relative;
+  padding: 24px;
+}
+
+.proc-visual .pv-readouts {
+  position: absolute;
+  top: 20px; left: 20px; right: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-tertiary);
+  z-index: 2;
+}
+
+.pv-readouts .pv-block { text-align: left; }
+.pv-readouts .pv-block:last-child { text-align: right; }
+.pv-readouts .pv-num { color: var(--accent); font-size: 0.9rem; display: block; margin-top: 2px; }
+
+.proc-visual svg {
+  width: 100%; height: 100%;
+}
+
+.skeleton-joint {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 4px var(--accent));
+}
+.skeleton-bone {
+  stroke: var(--cyan);
+  stroke-width: 2;
+  opacity: 0.75;
+}
+
+@media (max-width: 900px) {
+  .processing-grid { grid-template-columns: 1fr; }
+  .proc-visual { max-width: 360px; margin: 0 auto; }
+}
