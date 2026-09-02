@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Eklavya</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .about-hero { padding: 72px 0 48px; max-width: 700px; }
+  .about-hero h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: 18px; }
+  .about-hero p { color: var(--ink-secondary); font-size: 1.05rem; line-height: 1.65; }
+  .about-section { padding: 40px 0; border-top: 1px solid var(--line-hair); }
+  .about-section h2 { font-size: 1.4rem; margin-bottom: 16px; }
+  .about-section p { color: var(--ink-secondary); line-height: 1.7; max-width: 68ch; margin-bottom: 14px; }
+  .pipeline-list { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 24px; }
+  .pipeline-list .panel { padding: 20px; font-size: 0.88rem; color: var(--ink-secondary); }
+  .pipeline-list .pl-num { font-family: var(--font-mono); color: var(--accent); font-size: 0.75rem; display:block; margin-bottom:10px; }
+  @media (max-width: 760px) { .pipeline-list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .pipeline-list { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body class="page-about">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand" aria-label="Eklavya home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" stroke="#35e08a" stroke-width="1.4" opacity="0.35"/>
+        <path d="M16 5L11 13H21L16 5Z" fill="#35e08a"/>
+        <path d="M16 27L11 19H21L16 27Z" fill="#1c211e" stroke="#35e08a" stroke-width="1.2"/>
+        <line x1="16" y1="13" x2="16" y2="19" stroke="#35e08a" stroke-width="1.4"/>
+        <circle cx="16" cy="16" r="2" fill="#08090a" stroke="#35e08a" stroke-width="1.2"/>
+      </svg>
+      <span class="brand-name">EKLAVYA</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-page="index.html">Home</a>
+      <a href="analyze.html" data-page="analyze.html">Analyze</a>
+      <a href="about.html" data-page="about.html">About</a>
+    </nav>
+    <div class="header-right">
+      <span class="status-pill" data-status-pill>
+        <span class="status-dot"></span>
+        <span data-status-label>DEMO MODE</span>
+      </span>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="about-hero">
+      <h1>Named for a student who mastered his craft by watching closely.</h1>
+      <p>Eklavya is an AI-powered technique analysis platform. It watches badminton footage the way a coach would — tracking the body, timing the shot, and turning what it sees into a technique score and specific feedback.</p>
+    </div>
+
+    <section class="about-section">
+      <h2>What it does today</h2>
+      <p>The current prototype supports badminton only. Upload a clip, tell Eklavya what shot to look for (or let it detect one automatically), and it returns a technique score, a breakdown across six mechanical checkpoints, a shot timeline, and coaching notes on what to keep and what to change.</p>
+      <p>Other sports — tennis, cricket, football — are on the roadmap but not yet supported.</p>
+    </section>
+
+    <section class="about-section">
+      <h2>How the analysis works</h2>
+      <p>Underneath, Eklavya's vision engine is built on OpenCV and MediaPipe's Pose Landmarker. It processes footage frame by frame, tracking 33 body landmarks and calculating elbow and knee joint angles to reconstruct the shape of every shot.</p>
+      <div class="pipeline-list">
+        <div class="panel"><span class="pl-num mono">01</span>Frame extraction and pose landmark detection across the full clip.</div>
+        <div class="panel"><span class="pl-num mono">02</span>Joint angle calculation at the elbow and knee through the swing.</div>
+        <div class="panel"><span class="pl-num mono">03</span>Movement-peak detection to isolate individual shots.</div>
+        <div class="panel"><span class="pl-num mono">04</span>Shot classification into smash, drop, drive, or push/block.</div>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>Demo Mode vs. a connected backend</h2>
+      <p>The analysis backend today runs as local Python scripts, not yet a hosted API. Whenever this frontend can't reach a live backend, it runs in Demo Mode: your real video is accepted and played back, but the analysis shown is realistic sample data, clearly labeled as a Demo Analysis. The interface never claims a real AI analysis happened when it didn't.</p>
+      <p>Once the backend is exposed as a REST API, only the request layer needs to change — the rest of this interface is already built against that contract.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="footer-tag">Eklavya — Train smarter. Play sharper.</span>
+    <nav class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

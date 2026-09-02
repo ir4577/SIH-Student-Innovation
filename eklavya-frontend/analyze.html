@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyze Footage — Eklavya</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/analyze.css">
+</head>
+<body class="page-analyze">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand" aria-label="Eklavya home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" stroke="#35e08a" stroke-width="1.4" opacity="0.35"/>
+        <path d="M16 5L11 13H21L16 5Z" fill="#35e08a"/>
+        <path d="M16 27L11 19H21L16 27Z" fill="#1c211e" stroke="#35e08a" stroke-width="1.2"/>
+        <line x1="16" y1="13" x2="16" y2="19" stroke="#35e08a" stroke-width="1.4"/>
+        <circle cx="16" cy="16" r="2" fill="#08090a" stroke="#35e08a" stroke-width="1.2"/>
+      </svg>
+      <span class="brand-name">EKLAVYA</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-page="index.html">Home</a>
+      <a href="analyze.html" data-page="analyze.html">Analyze</a>
+      <a href="about.html" data-page="about.html">About</a>
+    </nav>
+    <div class="header-right">
+      <span class="status-pill" data-status-pill>
+        <span class="status-dot"></span>
+        <span data-status-label>DEMO MODE</span>
+      </span>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <div class="workflow-header">
+      <h1 class="workflow-title">Analyze your footage</h1>
+      <p class="workflow-sub">Four quick steps from raw video to a full technique breakdown.</p>
+    </div>
+
+    <div class="step-tracker">
+      <div class="st-item" data-step="1">
+        <span class="st-num mono">01</span>
+        <span class="st-name">Sport</span>
+      </div>
+      <div class="st-item" data-step="2">
+        <span class="st-num mono">02</span>
+        <span class="st-name">Shot</span>
+      </div>
+      <div class="st-item" data-step="3">
+        <span class="st-num mono">03</span>
+        <span class="st-name">Upload</span>
+      </div>
+      <div class="st-item" data-step="4">
+        <span class="st-num mono">04</span>
+        <span class="st-name">Review</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: SPORT -->
+    <section class="workflow-step" data-step="1">
+      <h2 style="font-size:1.3rem; margin-bottom:20px;">What sport are we analyzing?</h2>
+      <div class="sports-grid" id="sportsGrid">
+        <button type="button" class="sport-card panel is-available" data-sport="badminton" aria-pressed="false">
+          <svg class="sc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+          <div>
+            <h3>🏸 Badminton</h3>
+            <span class="sc-status mono">AVAILABLE</span>
+          </div>
+        </button>
+        <div class="sport-card panel is-locked" aria-disabled="true">
+          <svg class="sc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>
+          <div>
+            <h3>Tennis</h3>
+            <span class="sc-status mono">COMING SOON</span>
+          </div>
+        </div>
+        <div class="sport-card panel is-locked" aria-disabled="true">
+          <svg class="sc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>
+          <div>
+            <h3>Cricket</h3>
+            <span class="sc-status mono">COMING SOON</span>
+          </div>
+        </div>
+        <div class="sport-card panel is-locked" aria-disabled="true">
+          <svg class="sc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/></svg>
+          <div>
+            <h3>Football</h3>
+            <span class="sc-status mono">COMING SOON</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="button" class="btn btn-primary" id="toShotStep" disabled>Continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: SHOT -->
+    <section class="workflow-step" data-step="2" hidden>
+      <h2 style="font-size:1.3rem; margin-bottom:6px;">What do you want to analyze?</h2>
+      <p style="color:var(--ink-secondary); margin-bottom:24px;">Pick a specific shot, or let Eklavya find it for you.</p>
+      <div class="shot-grid" id="shotGrid"></div>
+      <div style="display:flex; justify-content:space-between;">
+        <button type="button" class="btn btn-ghost" id="backToSport">Back</button>
+        <button type="button" class="btn btn-primary" id="toUploadStep" disabled>Continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: UPLOAD -->
+    <section class="workflow-step" data-step="3" hidden>
+      <h2 style="font-size:1.3rem; margin-bottom:6px;">Upload your game footage</h2>
+      <p style="color:var(--ink-secondary); margin-bottom:24px;">Drop a badminton video here or browse your device.</p>
+
+      <div id="uploadZoneWrap">
+        <div class="upload-zone" id="dropzone" tabindex="0" role="button" aria-label="Upload a video file">
+          <svg class="uz-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+          <h3>Drag and drop your video</h3>
+          <p>or click to browse your device</p>
+          <span class="btn btn-secondary">Browse files</span>
+          <div class="uz-formats mono">SUPPORTED: .MP4 · .MOV · .WEBM</div>
+        </div>
+        <input type="file" id="fileInput" accept=".mp4,.mov,.webm,video/mp4,video/quicktime,video/webm" class="sr-only" aria-hidden="true">
+      </div>
+
+      <div class="panel video-preview-card" id="previewWrap" hidden>
+        <video id="previewVideo" controls playsinline></video>
+        <div class="vp-meta">
+          <div class="vp-file-info">
+            <span class="vp-filename" id="previewFilename"></span>
+            <span class="vp-filesize mono" id="previewFilesize"></span>
+          </div>
+          <div class="vp-actions">
+            <button type="button" class="btn btn-secondary" id="replaceVideoBtn">Replace</button>
+            <button type="button" class="btn btn-ghost" id="removeVideoBtn">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:28px;">
+        <button type="button" class="btn btn-ghost" id="backToShot">Back</button>
+        <button type="button" class="btn btn-primary" id="toReviewStep" disabled>Continue</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: REVIEW -->
+    <section class="workflow-step" data-step="4" hidden>
+      <h2 style="font-size:1.3rem; margin-bottom:20px;">Ready to analyze</h2>
+
+      <div class="panel review-panel bracket-frame">
+        <div class="rp-title mono">ANALYSIS READY</div>
+        <div class="review-grid">
+          <div class="review-field">
+            <div class="rf-label mono">SPORT</div>
+            <div class="rf-value" id="reviewSport">—</div>
+          </div>
+          <div class="review-field">
+            <div class="rf-label mono">ACTIVITY</div>
+            <div class="rf-value" id="reviewActivity">—</div>
+          </div>
+          <div class="review-field">
+            <div class="rf-label mono">VIDEO</div>
+            <div class="rf-value" id="reviewVideo">—</div>
+          </div>
+          <div class="review-field">
+            <div class="rf-label mono">MODE</div>
+            <div class="rf-value" id="reviewMode">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="analyze-actions">
+        <button type="button" class="btn btn-ghost" id="backToUpload">Back</button>
+        <button type="button" class="btn btn-primary btn-lg" id="analyzeVideoBtn">Analyze Video</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span class="footer-tag">Eklavya — Train smarter. Play sharper.</span>
+    <nav class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="analyze.html">Analyze</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/analyze.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+/* ==========================================================================
+   Home Page
+   ========================================================================== */
+
+.hero {
+  padding: 88px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero .container {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ink-secondary);
+  border: 1px solid var(--line-hair-strong);
+  border-radius: 999px;
+  padding: 5px 12px 5px 8px;
+  margin-bottom: 28px;
+}
+.hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+.hero h1 {
+  font-size: clamp(2.6rem, 5vw, 4.1rem);
+  color: var(--ink-primary);
+  margin-bottom: 26px;
+  max-width: 12ch;
+}
+
+.hero-desc {
+  font-size: 1.1rem;
+  color: var(--ink-secondary);
+  max-width: 46ch;
+  margin-bottom: 38px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 44px;
+  flex-wrap: wrap;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 36px;
+}
+.hero-stat .stat-num {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+.hero-stat .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-tertiary);
+  margin-top: 2px;
+}
+
+/* Hero visual: pose figure on court grid */
+.hero-visual {
+  position: relative;
+  aspect-ratio: 1 / 1.05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-visual .court-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+}
+
+.hero-visual svg { width: 100%; height: 100%; }
+
+.hero-visual .scan-line {
+  position: absolute;
+  left: 6%; right: 6%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+  animation: scan-move 4.5s ease-in-out infinite;
+}
+
+@keyframes scan-move {
+  0%, 100% { top: 12%; opacity: 0; }
+  10% { opacity: 0.8; }
+  50% { top: 86%; opacity: 0.8; }
+  60% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual .scan-line { animation: none; display: none; }
+}
+
+/* Vision engine readout panel */
+.vision-panel {
+  margin-top: 96px;
+  padding: 28px 32px;
+}
+
+.vision-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vision-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-primary);
+}
+
+.vision-panel-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--ink-tertiary);
+}
+
+.vision-rows {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line-hair);
+  border: 1px solid var(--line-hair);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.vision-row {
+  background: var(--bg-panel);
+  padding: 18px 20px;
+}
+
+.vision-row .vr-name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-secondary);
+  margin-bottom: 10px;
+}
+
+.vision-row .vr-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.vr-state.state-active { color: var(--accent); }
+.vr-state.state-ready { color: var(--cyan); }
+.vr-state .vr-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+@media (max-width: 860px) {
+  .vision-rows { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ==========================================================================
+   How it works
+   ========================================================================== */
+
+.section {
+  padding: 100px 0;
+}
+
+.section-head {
+  max-width: 60ch;
+  margin-bottom: 56px;
+}
+
+.section-head h2 {
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  margin-bottom: 14px;
+}
+
+.section-head p {
+  color: var(--ink-secondary);
+  font-size: 1.05rem;
+}
+
+.steps-rail {
+  position: relative;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line-hair-strong);
+}
+
+.step-item {
+  padding: 32px 28px 0 0;
+  border-right: 1px solid var(--line-hair);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+
+.step-item:last-child { border-right: none; }
+
+.step-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 18px;
+  display: block;
+}
+
+.step-item h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.step-item p {
+  color: var(--ink-secondary);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 860px) {
+  .steps-grid { grid-template-columns: 1fr 1fr; }
+  .step-item { border-bottom: 1px solid var(--line-hair); padding-bottom: 28px; margin-bottom: 4px; }
+}
+@media (max-width: 560px) {
+  .steps-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Sports strip (home teaser)
+   ========================================================================== */
+
+.sports-teaser {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.sport-teaser-card {
+  padding: 28px 22px;
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sport-teaser-card.is-live {
+  background: linear-gradient(160deg, var(--bg-panel-2), var(--bg-panel));
+  border-color: var(--accent-line);
+}
+
+.sport-teaser-card h4 {
+  font-size: 1.15rem;
+}
+
+.sport-teaser-card .sc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-tertiary);
+}
+
+.sport-teaser-card.is-live .sc-tag { color: var(--accent); }
+
+@media (max-width: 860px) {
+  .sports-teaser { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .sports-teaser { grid-template-columns: 1fr; }
+}
+
+/* CTA band */
+.cta-band {
+  padding: 72px 0;
+  text-align: center;
+  border-top: 1px solid var(--line-hair);
+}
+.cta-band h2 {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  margin-bottom: 22px;
+}

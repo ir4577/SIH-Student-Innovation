@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analyzing — Eklavya</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/processing.css">
+</head>
+<body class="page-processing">
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="brand" aria-label="Eklavya home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="16" cy="16" r="15" stroke="#35e08a" stroke-width="1.4" opacity="0.35"/>
+        <path d="M16 5L11 13H21L16 5Z" fill="#35e08a"/>
+        <path d="M16 27L11 19H21L16 27Z" fill="#1c211e" stroke="#35e08a" stroke-width="1.2"/>
+        <line x1="16" y1="13" x2="16" y2="19" stroke="#35e08a" stroke-width="1.4"/>
+        <circle cx="16" cy="16" r="2" fill="#08090a" stroke="#35e08a" stroke-width="1.2"/>
+      </svg>
+      <span class="brand-name">EKLAVYA</span>
+    </a>
+    <nav class="main-nav" aria-label="Primary">
+      <a href="index.html" data-page="index.html">Home</a>
+      <a href="analyze.html" data-page="analyze.html">Analyze</a>
+      <a href="about.html" data-page="about.html">About</a>
+    </nav>
+    <div class="header-right">
+      <span class="status-pill" data-status-pill>
+        <span class="status-dot"></span>
+        <span data-status-label>DEMO MODE</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<main class="processing-shell">
+  <div class="container">
+    <div class="processing-grid">
+
+      <div class="proc-left">
+        <div class="proc-eyebrow mono">EKLAVYA VISION ENGINE</div>
+        <h1 class="proc-title">Analyzing your game</h1>
+
+        <div class="proc-percent mono" id="procPercent">0%</div>
+        <div class="proc-step-label mono" id="procStageLabel">Uploading video</div>
+        <div class="proc-bar-track"><div class="proc-bar-fill" id="procBarFill"></div></div>
+        <div class="proc-current" id="procCurrentProcess">Current process: <strong>Uploading video</strong></div>
+
+        <div class="proc-log" id="procLog"></div>
+      </div>
+
+      <div class="panel proc-visual bracket-frame">
+        <div class="pv-readouts">
+          <div class="pv-block">
+            <span>FRAME</span>
+            <span class="pv-num mono"><span id="pvFrameCurrent">0000</span> / <span id="pvFrameTotal">0000</span></span>
+          </div>
+          <div class="pv-block">
+            <span>POSE LANDMARKS</span>
+            <span class="pv-num mono">33</span>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g class="skeleton-bone">
+            <line x1="150" y1="115" x2="146" y2="170"/>
+            <line x1="146" y1="170" x2="128" y2="220"/>
+            <line x1="128" y1="220" x2="135" y2="270"/>
+            <line x1="146" y1="170" x2="168" y2="215"/>
+            <line x1="168" y1="215" x2="160" y2="270"/>
+            <line x1="150" y1="128" x2="120" y2="145"/>
+            <line x1="120" y1="145" x2="105" y2="175"/>
+            <line x1="150" y1="128" x2="185" y2="95"/>
+            <line x1="185" y1="95" x2="205" y2="60"/>
+          </g>
+          <g class="skeleton-joint">
+            <circle cx="150" cy="105" r="10"/>
+            <circle cx="150" cy="128" r="3.5"/>
+            <circle cx="146" cy="170" r="3.5"/>
+            <circle cx="128" cy="220" r="3.5"/>
+            <circle cx="135" cy="270" r="3.5"/>
+            <circle cx="168" cy="215" r="3.5"/>
+            <circle cx="160" cy="270" r="3.5"/>
+            <circle cx="120" cy="145" r="3.5"/>
+            <circle cx="105" cy="175" r="3.5"/>
+            <circle cx="185" cy="95" r="3.5"/>
+            <circle cx="205" cy="60" r="4"/>
+          </g>
+        </svg>
+
+        <div class="pv-readouts" style="top:auto; bottom:20px;">
+          <div class="pv-block">
+            <span>JOINT ANGLES</span>
+            <span class="pv-num mono">4</span>
+          </div>
+          <div class="pv-block">
+            <span>SHOT ENGINE</span>
+            <span class="pv-num mono">ACTIVE</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/mock-data.js"></script>
+<script src="js/processing.js"></script>
+</body>
+</html>
