@@ -102,7 +102,7 @@
   function renderDetectedShot(analysis) {
     const { detectedName, detectedConfidence } = els();
     detectedName.textContent = analysis.detectedActivity;
-    detectedConfidence.textContent = 'RULE-BASED DETECTION';
+    detectedConfidence.textContent = `${Math.round(analysis.confidence * 100)}% CONFIDENCE`;
   }
 
   function renderMetrics(analysis) {
@@ -215,7 +215,7 @@
       <tr data-time="${shot.timestamp}">
         <td class="st-shot-name">${Eklavya.escapeHtml(shot.type)}</td>
         <td class="mono">${Eklavya.formatTimestamp(shot.timestamp)}</td>
-        <td class="mono">RULE-BASED</td>
+        <td class="mono">${Math.round(shot.confidence * 100)}%</td>
         <td class="st-score">${shot.score}</td>
       </tr>
     `).join('');
@@ -304,8 +304,6 @@
     const { demoFlag, resultsSub } = els();
     if (analysis.isDemo || state.mode === 'demo') {
       demoFlag.hidden = false;
-    } else {
-      demoFlag.hidden = true;
     }
     resultsSub.textContent = "Here's what Eklavya found in your movement.";
 
