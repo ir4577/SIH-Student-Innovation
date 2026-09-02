@@ -240,6 +240,23 @@ async def analyze_video(video: UploadFile = File(...)):
         }
     }
 
+def analyze_smash_form(right_elbow_angle, right_wrist_y, right_shoulder_y):
+    feedback = []
+
+    is_arm_raised = right_wrist_y < right_shoulder_y
+
+    if is_arm_raised:
+        if right_elbow_angle < 70.0:
+            feedback.append("Elbow too bent!")
+        elif right_elbow_angle > 160.0:
+            feedback.append("Good full extension")
+        else:
+            feedback.append("Extend arm higher")
+    else:
+        feedback.append("Ready position")
+
+    return feedback
+
 
 # Analysis Function
 def run_analysis(csv_path):
@@ -249,6 +266,18 @@ def run_analysis(csv_path):
     from scipy.signal import find_peaks
 
     df = pd.read_csv(csv_path)
+
+    feedback_counts = {}
+
+    for _, row in df.iterrows():
+        tips = analyze_smash_form(
+            float(row["right_elbow_angle"]),
+            float(row["landmark_16_y"]),
+            float(row["landmark_12_y"])
+        )
+
+        for tip in tips:
+            feedback_counts[tip] = feedback_counts.get(tip, 0) + 1
 
     if df.empty or len(df) < 5:
 
@@ -306,6 +335,50 @@ def run_analysis(csv_path):
     )
 
     shots = []
+
+    arm_position_score = round(
+        float(arm_raised.mean()) * 100,
+        2
+    )
+
+    raised_frames = int(arm_raised.sum())
+
+    if raised_frames > 0:
+        full_extension_frames = int(
+            ((df["right_elbow_angle"] > 160.0) & arm_raised).sum()
+        )
+
+        elbow_extension_score = round(
+            (full_extension_frames / raised_frames) * 100,
+            2
+        )
+    else:
+        elbow_extension_score = 0.0
+
+    technique_score = round(
+        (arm_position_score + elbow_extension_score) / 2,
+        2
+    )
+
+    strengths = []
+    improvements = []
+
+
+
+    if feedback_counts.get("Good full extension", 0) > 0:
+        strengths.append(
+            "Good full extension during the overhead movement"
+        )
+
+    if feedback_counts.get("Elbow too bent!", 0) > 0:
+        improvements.append(
+            "Try extending your elbow more during the swing"
+        )
+
+    if feedback_counts.get("Extend arm higher", 0) > 0:
+        improvements.append(
+            "Try raising your arm higher during preparation"
+        )
 
     # Classify each shot
     for idx, peak_idx in enumerate(peaks, 1):
@@ -367,18 +440,18 @@ def run_analysis(csv_path):
     # Return structured result
     return {
         "total_frames": len(df),
-
-        "duration_seconds": round(
-            len(df) / FPS,
-            2
-        ),
-
-        "average_lateral_foot_speed": round(
-            float(lateral_foot_speed.mean()),
-            4
-        ),
-
+        "duration_seconds": round(len(df) / FPS, 2),
+        "average_lateral_foot_speed": round(float(lateral_foot_speed.mean()), 4),
         "shots_detected": len(shots),
+        "shots": shots,
+        "techniqueScore": technique_score,
+        "metrics": {
+            "armPosition": arm_position_score,
+            "elbowExtension": elbow_extension_score
+        },
 
-        "shots": shots
+        "feedback": {
+            "strengths": strengths,
+            "improvements": improvements
+        }
     }

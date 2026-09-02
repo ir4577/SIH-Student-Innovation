@@ -114,17 +114,20 @@
         const analysis = {
           ...backend,
 
-          techniqueScore: 0,
+          techniqueScore: backend.techniqueScore ?? 0,
           tier: 'DEVELOPING',
 
           detectedActivity: backend.shots?.[0]?.classification || 'Unknown',
           confidence: 0,
 
-          metrics: {},
+          metrics: backend.metrics || {},
 
-          metricLabels: {},
+          metricLabels: {
+            armPosition: 'Arm Position',
+            elbowExtension: 'Elbow Extension'
+          },
 
-          feedback: {
+          feedback: backend.feedback || {
             strengths: [],
             improvements: []
           },
@@ -138,7 +141,8 @@
 
           movementProfile: {},
 
-          hasAnnotatedVideo: false
+          hasAnnotatedVideo: false,
+          isDemo: false
         };
 
         Eklavya.saveAnalysisState({
