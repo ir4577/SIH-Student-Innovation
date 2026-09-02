@@ -74,7 +74,7 @@
     window.location.href = 'results.html';
   }
 
-  function init() {
+  async function init() {
     if (!document.body.classList.contains('page-processing')) return;
 
     const state = Eklavya.getAnalysisState();
@@ -89,11 +89,78 @@
     // below is where a live poll loop against EklavyaAPI would replace
     // runDemoProgress() once /api/analyze exists.
     if (state.mode === 'backend') {
-      Eklavya.showToast({
-        title: 'Backend unavailable',
-        body: 'Falling back to Demo Mode for this analysis.'
-      });
+      try {
+        const stored = await Eklavya.getVideoBlob();
+
+        if (!stored || !stored.blob) {
+          throw new Error('Video not found');
+        }
+
+        const file = new File(
+          [stored.blob],
+          stored.name,
+          { type: stored.type }
+        );
+
+        const result = await EklavyaAPI.uploadVideo(file, {
+          sport: state.sport,
+          activity: state.activity
+        });
+
+        console.log('Backend result:', result);
+
+        const backend = result.analysis;
+
+        const analysis = {
+          ...backend,
+
+          techniqueScore: 0,
+          tier: 'DEVELOPING',
+
+          detectedActivity: backend.shots?.[0]?.classification || 'Unknown',
+          confidence: 0,
+
+          metrics: {},
+
+          metricLabels: {},
+
+          feedback: {
+            strengths: [],
+            improvements: []
+          },
+
+          shots: (backend.shots || []).map(shot => ({
+            type: shot.classification,
+            timestamp: shot.frame / 30,
+            confidence: 1,
+            score: 0
+          })),
+
+          movementProfile: {},
+
+          hasAnnotatedVideo: false
+        };
+
+        Eklavya.saveAnalysisState({
+          result: analysis,
+          videoId: result.video_id,
+          mode: 'backend'
+        });
+
+        window.location.href = 'results.html';
+
+      } catch (err) {
+        console.error('Backend analysis failed:', err);
+
+        Eklavya.showToast({
+          title: 'Analysis failed',
+          body: err.message
+        });
+      }
+
+      return;
     }
+
     runDemoProgress();
   }
 

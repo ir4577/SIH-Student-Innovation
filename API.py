@@ -5,7 +5,7 @@ import csv
 
 from pathlib import Path
 from fastapi import FastAPI, UploadFile, File, HTTPException
-
+from fastapi.middleware.cors import CORSMiddleware
 
 ####
 ####  HIGHLY SUGGEST Using python 3.13.X 🙏
@@ -23,6 +23,17 @@ app = FastAPI(
     title="Badminton Analysis API",
     description="API for analyzing badminton videos",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5500",
+        "http://127.0.0.1:5500"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Directories

@@ -24,7 +24,7 @@ const EklavyaAPI = (() => {
   const API_BASE_URL = 'http://localhost:8000';
 
   const ENDPOINTS = {
-    analyze: () => `${API_BASE_URL}/api/analyze`,
+    analyze: () => `${API_BASE_URL}/analyze`,
     result: (id) => `${API_BASE_URL}/api/analysis/${id}`,
     video: (id) => `${API_BASE_URL}/api/analysis/${id}/video`,
     annotatedVideo: (id) => `${API_BASE_URL}/api/analysis/${id}/annotated-video`
@@ -41,7 +41,7 @@ const EklavyaAPI = (() => {
     try {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), HEALTH_CHECK_TIMEOUT_MS);
-      const res = await fetch(`${API_BASE_URL}/api/health`, { signal: controller.signal });
+      const res = await fetch(`${API_BASE_URL}/docs`, { signal: controller.signal });
       clearTimeout(timer);
       return res.ok;
     } catch (err) {
